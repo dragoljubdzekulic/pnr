@@ -40,7 +40,7 @@ def parse_pnr(pnr_data):
             departure_time = itinerary_parts[7]
             arrival_time = itinerary_parts[8]
             extra_info = ' '.join(itinerary_parts[9:]) if len(itinerary_parts) > 9 else ''
-           
+            
             itinerary_info = {
                 'airline_code': flight_details,
                 'flight_number': flight_number,
@@ -54,7 +54,7 @@ def parse_pnr(pnr_data):
                 'extra_info': extra_info
             }
             pnr_info['itinerary'].append(itinerary_info)
-   
+    
     return pnr_info
 
 @app.route('/parse_pnr', methods=['POST'])
