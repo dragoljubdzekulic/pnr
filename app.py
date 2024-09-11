@@ -47,11 +47,15 @@ def parse_pnr(pnr_data):
             last_name = last_name[3:].strip()  # Strip '1.1' from the last name
 
         pnr_info['passenger_name']['last_name'] = last_name
-        first_name_and_title = name_parts[1].split(' ')
 
-        # Validate if first name and title exist
-        pnr_info['passenger_name']['first_name'] = first_name_and_title[0].strip() if len(first_name_and_title) > 0 else ''
-        pnr_info['passenger_name']['title'] = first_name_and_title[1].strip() if len(first_name_and_title) > 1 else ''
+        # Check if first name and title are provided
+        if len(name_parts) > 1:
+            first_name_and_title = name_parts[1].split(' ')
+            pnr_info['passenger_name']['first_name'] = first_name_and_title[0].strip() if len(first_name_and_title) > 0 else ''
+            pnr_info['passenger_name']['title'] = first_name_and_title[1].strip() if len(first_name_and_title) > 1 else ''
+        else:
+            pnr_info['passenger_name']['first_name'] = ''
+            pnr_info['passenger_name']['title'] = ''
 
     # Parse itinerary
     for line in lines[2:]:
