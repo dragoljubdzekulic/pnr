@@ -47,7 +47,7 @@ def parse_pnr(pnr_data):
         first_name_and_title = name_parts[1].split(' ')
         pnr_info['passenger_name']['first_name'] = first_name_and_title[0].strip()
         if len(first_name_and_title) > 1:
-            pnr_info['passenger_name']['title'] = first_name_and_title[1].strip()
+            pnr_info['passenger_name']['title'] = first_name_and_title[1].strip() if len(first_name_and_title) > 1 else ''
 
     for line in lines[2:]:
         pattern = (
@@ -61,7 +61,7 @@ def parse_pnr(pnr_data):
             r'(\w{2,3}\d*)?\s*'           # Status (optional)
             r'(\d{4})\s+'                 # Departure time
             r'(\d{4})\s*'                 # Arrival time
-            r'(.*)'                       # Extra info (optional)
+            r'(.*)?'                      # Extra info (optional)
         )
         match = re.match(pattern, line)
         if not match:
@@ -69,22 +69,22 @@ def parse_pnr(pnr_data):
             continue
 
         route = match.group(7)
-        departure_location = route[:3]
-        arrival_location = route[3:]
+        departure_location = route[:3] if len(route) >= 6 else ''
+        arrival_location = route[3:] if len(route) >= 6 else ''
 
         segment_info = {
-            'segment_number': match.group(1),
-            'airline_code': match.group(2),
-            'flight_number': match.group(3),
-            'cabin_class': match.group(4) if match.group(4) else '',
-            'date': match.group(5),
+            'segment_number': match.group(1) if match.group(1) else '',
+            'airline_code': match.group(2) if match.group(2) else '',
+            'flight_number': match.group(3) if match.group(3) else '',
+            'cabin_class': match.group(4) if match.group(4) and is_cabin_class(match.group(4)) else '',
+            'date': match.group(5) if match.group(5) else '',
             'day': match.group(6) if match.group(6) else '',
-            'route': route,
+            'route': route if route else '',
             'departure_location': departure_location,
             'arrival_location': arrival_location,
             'status': match.group(8) if match.group(8) else '',
-            'departure_time': match.group(9),
-            'arrival_time': match.group(10),
+            'departure_time': match.group(9) if match.group(9) else '',
+            'arrival_time': match.group(10) if match.group(10) else '',
             'extra_info': match.group(11).strip() if match.group(11) else ''
         }
 
