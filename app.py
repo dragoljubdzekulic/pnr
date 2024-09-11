@@ -48,8 +48,8 @@ def parse_pnr(pnr_data):
             r'([A-Z])?\s*'                # Day (optional)
             r'([A-Z]{6})\s+'              # Route
             r'(\w{2,3}\d*)?\s*'           # Status (optional)
-            r'(\d{4})?\s*'                # Departure time (optional, might be incomplete)
-            r'(\d{4})?\s*'                # Arrival time (optional, might be incomplete)
+            r'(\d{3,4})?\s*'              # Departure time (3 or 4 digits, optional)
+            r'(\d{3,4})?\s*'              # Arrival time (3 or 4 digits, optional)
             r'(.*)?'                      # Extra info (optional)
         )
         match = re.match(pattern, line)
